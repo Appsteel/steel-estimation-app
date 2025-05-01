@@ -20,17 +20,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 h-20 bg-blue-100 shadow-sm z-50 flex items-center px-4">
+      <div className="fixed top-0 left-0 right-0 h-24 bg-blue-100 shadow-sm z-50 flex items-center px-4">
         <img 
           src="/logo.png" 
           alt="Company Logo" 
-          className="h-22 w-auto mr-3"
+          className="h-20 w-auto mr-4"
         />
         <h1 className="text-2xl font-bold text-gray-800">Steel Estimation</h1>
       </div>
 
       {/* Sidebar for desktop */}
-      <div className={`hidden md:flex md:flex-shrink-0 transition-all duration-300 mt-20 ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}`}>
+      <div className={`hidden md:flex md:flex-shrink-0 transition-all duration-300 mt-24 ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}`}>
         <div className="flex flex-col w-full border-r border-gray-200 bg-blue-100">
           <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
             <nav className="flex-1 px-2 bg-blue-100 space-y-1">
@@ -69,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       {/* Mobile menu */}
-      <div className="md:hidden fixed top-20 left-0 right-0 bottom-0 z-40">
+      <div className="md:hidden fixed top-24 left-0 right-0 bottom-0 z-40">
         <div className={`fixed inset-0 flex transform ease-in-out duration-300 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
@@ -120,7 +120,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Menu className="h-6 w-6" />
           </button>
         </div>
-        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none mt-20">
+        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none mt-24">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {children}
