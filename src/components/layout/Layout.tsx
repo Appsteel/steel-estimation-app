@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <img 
             src="/logo.png" 
             alt="Company Logo" 
-            className="h-12 w-auto mr-4"
+            className="h-20 w-auto mr-4"
           />
           <h1 className="text-2xl font-bold text-gray-800">Steel Estimation</h1>
         </div>
