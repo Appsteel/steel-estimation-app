@@ -155,7 +155,7 @@ const QuotationLetter: React.FC = () => {
           <div className="flex justify-between items-start mb-6">
             <div>
               <img 
-                src="/images/logo.jpg" 
+                src="/logo.png" 
                 alt="Company Logo" 
                 className="h-16 object-contain"
               />
