@@ -238,9 +238,11 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
   doc.text('Authorized Signature', MARGIN_LEFT + 20, signatureY + 7, { align: 'left' });
 
   // Date line
-  const dateLineX = MARGIN_LEFT + SIGNATURE_LINE_WIDTH + 10;
-  doc.line(dateLineX, signatureY + 3, dateLineX + 40, signatureY + 3);
-  doc.text('Date', dateLineX, signatureY + 7, { align: 'left' });
+  const dateLineWidth = 40;
+  const dateTextX = PAGE_WIDTH - MARGIN_RIGHT;
+  doc.line(dateTextX - dateLineWidth, signatureY + 3, dateTextX, signatureY + 3); // Draw line aligned right
+  doc.text('Date', dateTextX, signatureY + 7, { align: 'right' }); // Right-align the text
+
 
   addFooter();
   doc.save(`${projectInfo.quoteNumber}-quotation.pdf`);
