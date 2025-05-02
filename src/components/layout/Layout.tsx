@@ -75,7 +75,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className={`md:hidden fixed inset-0 bg-gray-600 bg-opacity-75 z-40 transition-opacity duration-300 ${
         mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}>
-        <aside className={`fixed inset-y-0 left-0 w-64 bg-blue-100 transform transition-transform duration-300 ease-in-out ${
+        <aside className={`fixed inset-y-0 TOP-20 left-0 w-64 bg-blue-100 transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           <div className="h-full flex flex-col">
