@@ -92,9 +92,111 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
   };
 
   if (type === 'front-sheet') {
-    if (logo) doc.addImage(logo, 'JPEG', MARGIN_LEFT, 10, 40, 15);
+    addHeader();
+    let yPos = MARGIN_TOP + 25;
+
+    // Project Information
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    yPos = addText('Project Information', MARGIN_LEFT, yPos);
     doc.setFontSize(10);
-    doc.text(COMPANY_ADDRESS, MARGIN_LEFT, 30);
+    doc.setFont('helvetica', 'normal');
+
+    const projectFields = [
+      ['Quote Number:', projectInfo.quoteNumber],
+      ['Date:', projectInfo.date],
+      ['Project Name:', projectInfo.projectName],
+      ['Project Address:', projectInfo.projectAddress],
+      ['General Contractor:', projectInfo.gcName],
+      ['GC Address:', projectInfo.gcAddress],
+      ['Contact Person:', projectInfo.contactPerson],
+      ['Contact Phone:', projectInfo.contactPhone],
+      ['Closing Date:', projectInfo.closingDate],
+      ['Estimator:', projectInfo.estimator],
+    ];
+
+    projectFields.forEach(([label, value]) => {
+      yPos = checkPageBreak(yPos);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText(label, MARGIN_LEFT, yPos + 5);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(value || '', MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+    });
+
+    // Drawings Information
+    yPos = checkPageBreak(yPos, 60);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    yPos = addText('Drawings Information', MARGIN_LEFT, yPos + 10);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+
+    const drawingsFields = [
+      ['Structural Drawings:', projectInfo.structuralDrawings],
+      ['Date:', projectInfo.structuralDrawingsDate],
+      ['Revision:', projectInfo.structuralDrawingsRevision],
+      ['Architectural Drawings:', projectInfo.architecturalDrawings],
+      ['Date:', projectInfo.architecturalDrawingsDate],
+      ['Revision:', projectInfo.architecturalDrawingsRevision],
+    ];
+
+    drawingsFields.forEach(([label, value]) => {
+      yPos = checkPageBreak(yPos);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText(label, MARGIN_LEFT, yPos + 5);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(value || '', MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+    });
+
+    // Cost Summary
+    yPos = checkPageBreak(yPos, 80);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    yPos = addText('Cost Summary', MARGIN_LEFT, yPos + 10);
+    doc.setFontSize(10);
+
+    if (structuralSteel.visible) {
+      yPos = checkPageBreak(yPos);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText('Structural Steel:', MARGIN_LEFT, yPos + 5);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(`$${(structuralSteel.overriddenTotalCost ?? structuralSteel.totalCost).toLocaleString()}`, MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+    }
+
+    if (metalDeck.visible) {
+      yPos = checkPageBreak(yPos);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText('Metal Deck:', MARGIN_LEFT, yPos + 5);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(`$${(metalDeck.overriddenTotalCost ?? metalDeck.totalCost).toLocaleString()}`, MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+    }
+
+    if (miscellaneousSteel.visible) {
+      yPos = checkPageBreak(yPos);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText('Miscellaneous Steel:', MARGIN_LEFT, yPos + 5);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(`$${(miscellaneousSteel.overriddenTotalCost ?? miscellaneousSteel.totalCost).toLocaleString()}`, MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+    }
+
+    yPos = checkPageBreak(yPos);
+    doc.setFont('helvetica', 'bold');
+    yPos = addText('Total Cost:', MARGIN_LEFT, yPos + 8);
+    doc.setFont('helvetica', 'normal');
+    yPos = addText(`$${data.totalCost.toLocaleString()}`, MARGIN_LEFT + 80, yPos - LINE_HEIGHT);
+
+    // Remarks
+    if (data.remarks) {
+      yPos = checkPageBreak(yPos, 60);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      yPos = addText('Remarks', MARGIN_LEFT, yPos + 10);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      yPos = addText(data.remarks, MARGIN_LEFT, yPos + 5);
+    }
+
+    addFooter();
     doc.save(`${projectInfo.quoteNumber}-front-sheet.pdf`);
     return;
   }
@@ -243,8 +345,6 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
   doc.line(dateLineX, signatureY + 3, dateLineX + dateLineWidth, signatureY + 3); // Longer line
   doc.text('Date', dateLineX, signatureY + 7); // Left-justified text aligned to the start of the line
 
-
-
   addFooter();
   doc.save(`${projectInfo.quoteNumber}-quotation.pdf`);
 };
@@ -253,7 +353,171 @@ export const downloadAsExcel = async (data: EstimateData, type: 'front-sheet' | 
   const workbook = XLSX.utils.book_new();
   const { projectInfo, structuralSteel, metalDeck, miscellaneousSteel } = data;
 
-  // Create worksheet data
+  if (type === 'front-sheet') {
+    // Project Information Sheet
+    const projectInfoData = [
+      ['Project Information'],
+      ['Quote Number', projectInfo.quoteNumber],
+      ['Date', projectInfo.date],
+      ['Project Name', projectInfo.projectName],
+      ['Project Address', projectInfo.projectAddress],
+      ['General Contractor', projectInfo.gcName],
+      ['GC Address', projectInfo.gcAddress],
+      ['Contact Person', projectInfo.contactPerson],
+      ['Contact Phone', projectInfo.contactPhone],
+      ['Closing Date', projectInfo.closingDate],
+      ['Estimator', projectInfo.estimator],
+      ['Architect', projectInfo.architect],
+      ['Architect Phone', projectInfo.architectPhone],
+      ['Engineer', projectInfo.engineer],
+      ['Engineer Phone', projectInfo.engineerPhone],
+    ];
+    const wsProjectInfo = XLSX.utils.aoa_to_sheet(projectInfoData);
+    XLSX.utils.book_append_sheet(workbook, wsProjectInfo, 'Project Info');
+
+    // Drawings Sheet
+    const drawingsData = [
+      ['Drawings Information'],
+      ['Structural Drawings', projectInfo.structuralDrawings],
+      ['Date', projectInfo.structuralDrawingsDate],
+      ['Revision', projectInfo.structuralDrawingsRevision],
+      ['Architectural Drawings', projectInfo.architecturalDrawings],
+      ['Date', projectInfo.architecturalDrawingsDate],
+      ['Revision', projectInfo.architecturalDrawingsRevision],
+    ];
+    const wsDrawings = XLSX.utils.aoa_to_sheet(drawingsData);
+    XLSX.utils.book_append_sheet(workbook, wsDrawings, 'Drawings');
+
+    // Structural Steel Sheet
+    if (structuralSteel.visible) {
+      const structuralData = [
+        ['Structural Steel Information'],
+        ['Area', structuralSteel.area],
+        ['Weight', structuralSteel.weight],
+        ['Connection Allowance', structuralSteel.connectionAllowance],
+        ['Total Weight', structuralSteel.totalWeight],
+        ['Total Tons', structuralSteel.totalTons],
+        [''],
+        ['Material Items'],
+        ['Description', 'Weight', 'Unit Rate', 'Total Cost'],
+        ...structuralSteel.material.map(item => [
+          item.description,
+          item.weight,
+          item.unitRate,
+          item.totalCost
+        ]),
+        [''],
+        ['Shop Labour'],
+        ['Member Group', 'Total Pieces', 'Pieces/Day', 'Hours', 'Hourly Rate', 'Total Cost'],
+        ...structuralSteel.shopLabour.map(item => [
+          item.memberGroup,
+          item.totalPcs,
+          item.pcsPerDay,
+          item.hours,
+          item.hourlyRate,
+          item.totalCost
+        ]),
+        [''],
+        ['OWSJ Information'],
+        ['Supplier', structuralSteel.owsj.supplier],
+        ['Pieces', structuralSteel.owsj.pcs],
+        ['Weight', structuralSteel.owsj.weight],
+        ['Price/Weight', structuralSteel.owsj.pricePerWeight],
+        ['Cost', structuralSteel.owsj.cost],
+        [''],
+        ['Engineering & Drafting'],
+        ['Engineering Cost', structuralSteel.engineeringDrafting.engineering],
+        ['Drafting Tons', structuralSteel.engineeringDrafting.draftingTons],
+        ['Drafting Price/Ton', structuralSteel.engineeringDrafting.draftingPricePerTon],
+        ['Drafting Cost', structuralSteel.engineeringDrafting.draftingCost],
+        ['Total Cost', structuralSteel.engineeringDrafting.totalCost],
+        [''],
+        ['Erection & Freight'],
+        ['Erector', structuralSteel.erectionFreight.erector],
+        ['Tons', structuralSteel.erectionFreight.tons],
+        ['Price/Ton', structuralSteel.erectionFreight.pricePerTon],
+        ['Premium', structuralSteel.erectionFreight.premium],
+        ['Erection Cost', structuralSteel.erectionFreight.erectionCost],
+        ['Regular Trips', structuralSteel.erectionFreight.regularTrips],
+        ['Regular Trip Cost', structuralSteel.erectionFreight.regularTripCost],
+        ['Trailer Trips', structuralSteel.erectionFreight.trailerTrips],
+        ['Trailer Trip Cost', structuralSteel.erectionFreight.trailerTripCost],
+        ['Freight Cost', structuralSteel.erectionFreight.freightCost],
+        ['Total Cost', structuralSteel.erectionFreight.totalCost],
+        [''],
+        ['Overhead & Profit'],
+        ['Overhead %', structuralSteel.overheadProfit.overhead],
+        ['Profit %', structuralSteel.overheadProfit.profit],
+        ['Total %', structuralSteel.overheadProfit.totalPercentage],
+        [''],
+        ['Final Costs'],
+        ['Total Cost', structuralSteel.totalCost],
+        ['Overridden Total Cost', structuralSteel.overriddenTotalCost || 'N/A'],
+      ];
+      const wsStructural = XLSX.utils.aoa_to_sheet(structuralData);
+      XLSX.utils.book_append_sheet(workbook, wsStructural, 'Structural Steel');
+    }
+
+    // Metal Deck Sheet
+    if (metalDeck.visible) {
+      const metalDeckData = [
+        ['Metal Deck Information'],
+        ['Area', metalDeck.area],
+        ['Cost/Sq.ft', metalDeck.costPerSqft],
+        ['Total Cost', metalDeck.totalCost],
+        ['Overridden Total Cost', metalDeck.overriddenTotalCost || 'N/A'],
+      ];
+      const wsMetalDeck = XLSX.utils.aoa_to_sheet(metalDeckData);
+      XLSX.utils.book_append_sheet(workbook, wsMetalDeck, 'Metal Deck');
+    }
+
+    // Miscellaneous Steel Sheet
+    if (miscellaneousSteel.visible) {
+      const miscData = [
+        ['Miscellaneous Steel Items'],
+        ['Type', 'Description', 'Unit', 'Unit Rate', 'Total Cost'],
+        ...miscellaneousSteel.items.map(item => [
+          item.type,
+          item.description,
+          item.unit,
+          item.unitRate,
+          item.totalCost
+        ]),
+        [''],
+        ['Total Cost', miscellaneousSteel.totalCost],
+        ['Overridden Total Cost', miscellaneousSteel.overriddenTotalCost || 'N/A'],
+      ];
+      const wsMisc = XLSX.utils.aoa_to_sheet(miscData);
+      XLSX.utils.book_append_sheet(workbook, wsMisc, 'Miscellaneous Steel');
+    }
+
+    // Summary Sheet
+    const summaryData = [
+      ['Cost Summary'],
+      ['Section', 'Cost'],
+      structuralSteel.visible ? ['Structural Steel', (structuralSteel.overriddenTotalCost ?? structuralSteel.totalCost)] : [],
+      metalDeck.visible ? ['Metal Deck', (metalDeck.overriddenTotalCost ?? metalDeck.totalCost)] : [],
+      miscellaneousSteel.visible ? ['Miscellaneous Steel', (miscellaneousSteel.overriddenTotalCost ?? miscellaneousSteel.totalCost)] : [],
+      [''],
+      ['Total Cost', data.totalCost],
+      [''],
+      ['Remarks', data.remarks || 'N/A'],
+    ].filter(row => row.length > 0);
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(workbook, wsSummary, 'Summary');
+
+    // Set column widths for all sheets
+    const sheets = workbook.SheetNames;
+    sheets.forEach(sheetName => {
+      const ws = workbook.Sheets[sheetName];
+      ws['!cols'] = [{ wch: 25 }, { wch: 50 }];
+    });
+
+    XLSX.writeFile(workbook, `${projectInfo.quoteNumber}-front-sheet.xlsx`);
+    return;
+  }
+
+  // Create worksheet data for quotation
   const wsData = [
     ['Company Address', COMPANY_ADDRESS],
     ['Date', projectInfo.date],
