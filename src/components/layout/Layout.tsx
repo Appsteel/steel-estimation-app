@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 h-21 bg-blue-100 shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 h-24 bg-blue-100 shadow-sm z-50">
         <div className="flex items-center h-full px-4">
           <img 
             src="/logo.png" 
