@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <header className="fixed top-0 left-0 right-0 h-16 bg-blue-100 shadow-sm z-50">
         <div className="flex items-center h-full px-4">
           <img 
-            src="/images/logo.jpg" 
+            src="/public/logo.png" 
             alt="Company Logo" 
             className="h-12 w-auto mr-4"
           />
