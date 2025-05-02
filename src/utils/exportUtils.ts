@@ -238,10 +238,11 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
   doc.text('Authorized Signature', MARGIN_LEFT + 20, signatureY + 7, { align: 'left' });
 
   // Date line
-  const dateLineWidth = 40;
-  const dateTextX = PAGE_WIDTH - MARGIN_RIGHT;
-  doc.line(dateTextX - dateLineWidth, signatureY + 3, dateTextX, signatureY + 3); // Draw line aligned right
-  doc.text('Date', dateTextX, signatureY + 7, { align: 'right' }); // Right-align the text
+  const dateLineX = PAGE_WIDTH - MARGIN_RIGHT - 60; // Start of line
+  const dateLineWidth = 60; // You can make this as long as needed
+  doc.line(dateLineX, signatureY + 3, dateLineX + dateLineWidth, signatureY + 3); // Longer line
+  doc.text('Date', dateLineX, signatureY + 7); // Left-justified text aligned to the start of the line
+
 
 
   addFooter();
