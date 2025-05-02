@@ -32,7 +32,7 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
 
   let logo: HTMLImageElement | null = null;
   try {
-    logo = await loadImage('/images/logo.jpg');
+    logo = await loadImage('/logo.png');
   } catch (error) {
     console.error('Failed to load logo:', error);
   }
@@ -40,7 +40,7 @@ export const downloadAsPDF = async (data: EstimateData, type: 'front-sheet' | 'q
   const pageNumbers: number[] = [];
 
   const addHeader = () => {
-    if (logo) doc.addImage(logo, 'JPEG', MARGIN_LEFT, MARGIN_TOP - 5, 40, 15);
+    if (logo) doc.addImage(logo, 'PNG', MARGIN_LEFT, MARGIN_TOP - 5, 40, 15);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.text(COMPANY_ADDRESS, MARGIN_LEFT, MARGIN_TOP + 15);
