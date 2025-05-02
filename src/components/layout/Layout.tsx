@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Desktop Sidebar */}
       <aside 
-        className={`fixed left-0 top-21 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
+        className={`fixed left-0 top-16 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
           sidebarCollapsed ? 'w-16' : 'w-64'
         } hidden md:block`}
       >
