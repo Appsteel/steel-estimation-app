@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Desktop Sidebar */}
       <aside 
-        className={`fixed left-0 top-16 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
+        className={`fixed left-0 top-20 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
           sidebarCollapsed ? 'w-16' : 'w-64'
         } hidden md:block`}
       >
@@ -110,7 +110,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       {/* Main Content */}
-      <main className={`pt-16 transition-all duration-300 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+      <main className={`pt-24 transition-all duration-300 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
         <div className="md:hidden px-4 py-2 bg-blue-100 border-b border-gray-200">
           <button
             onClick={() => setMobileMenuOpen(true)}
