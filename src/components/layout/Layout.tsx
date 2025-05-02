@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-blue-100 shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 h-21 bg-blue-100 shadow-sm z-50">
         <div className="flex items-center h-full px-4">
           <img 
             src="/logo.png" 
@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Desktop Sidebar */}
       <aside 
-        className={`fixed left-0 top-16 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
+        className={`fixed left-0 top-21 bottom-0 bg-blue-100 border-r border-gray-200 transition-all duration-300 z-40 ${
           sidebarCollapsed ? 'w-16' : 'w-64'
         } hidden md:block`}
       >
